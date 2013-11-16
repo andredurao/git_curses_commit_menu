@@ -6,7 +6,6 @@
 #include "git_status.h"
 
 
-//TODO: try to only use the help as a window, the main window is the stdscr
 int main(int argc, char** argv){
   
   initial_check();
@@ -21,6 +20,7 @@ int main(int argc, char** argv){
   getmaxyx(stdscr,rows,cols);
   refresh();
 
+  display_branch();
   print_files_menu();
 
   //move(5,right_center_col());

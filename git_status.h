@@ -15,4 +15,6 @@ void check(int,const char*, const char *);
 
 void fail(const char *);
 
+char* get_branch_name();
+
 #endif

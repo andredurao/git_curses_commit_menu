@@ -3,6 +3,11 @@
 #include <curses.h>
 #include <string.h>
 #include "status_menu.h"
+#include "git_status.h"
+
+void display_branch(){
+  mvprintw(4, left_center_col(), get_branch_name());
+}
 
 void show_help(){
   clear();

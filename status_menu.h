@@ -6,6 +6,7 @@ int rows,cols;
 int menu_index;
 int previous_index;
 
+void display_branch();
 void show_help();
 void move_menu(int);
 void highlight();

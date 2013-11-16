@@ -52,3 +52,28 @@ void fail(const char *message)
 {
 	check(-1, message, NULL);
 }
+
+
+char* get_branch_name()
+{
+	int error = 0;
+	const char *branch_name = NULL;
+	git_reference *head = NULL;
+
+	error = git_repository_head(&head, repo);
+
+	if (error == GIT_EORPHANEDHEAD || error == GIT_ENOTFOUND)
+		branch_name = NULL;
+	else if (!error) {
+		branch_name = git_reference_name(head);
+		if (!strncmp(branch_name, "refs/heads/", strlen("refs/heads/")))
+			branch_name += strlen("refs/heads/");
+	} else
+		check(error, "failed to get current branch", NULL);
+
+//  printf("# On branch %s\n", branch ? branch : "Not currently on any branch.");
+
+	git_reference_free(head);
+  //force const char* to char*
+  return (strstr(branch_name, branch_name));
+}
