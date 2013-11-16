@@ -41,11 +41,18 @@ int right_center_col(){
 }
 
 void print_files_menu(){
-  char files[6][10]= {"file1","file2","file3","file4","file5","file6"};
   int i=0;
-  while (i<6){
-    mvprintw(5+i, left_center_col(), files[i]);
-    i++;
+
+  display_branch();
+
+	for (i = 0; i < maxi; ++i) {
+    //mvprintw(5+i, left_center_col(), repofile_list[i]->filename);
+    mvprintw(5+i, left_center_col(), formatted_filename(i));
   }
   highlight();
+}
+
+void check_row(){
+  repofile_list[menu_index]->check = !repofile_list[menu_index]->check;
+  print_files_menu();
 }

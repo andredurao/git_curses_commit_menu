@@ -77,3 +77,41 @@ char* get_branch_name()
   //force const char* to char*
   return (strstr(branch_name, branch_name));
 }
+
+
+void get_files_list(){
+  
+	size_t i, status_index;
+  maxi = git_status_list_entrycount(status);
+	const git_status_entry *s;
+
+  repofile_list = (repofile**) malloc(maxi * sizeof(repofile));
+  status_index = 0;
+	for (i = 0; i < maxi; ++i) {
+		s = git_status_byindex(status, i);
+    repofile_list[i] = (repofile*) malloc(sizeof(repofile));
+    strcpy(repofile_list[i]->filename,""); 
+    repofile_list[i]->check = FALSE;
+		if (s->status == GIT_STATUS_WT_NEW) {
+      strcpy(repofile_list[status_index]->filename,
+             s->index_to_workdir->old_file.path); 
+      repofile_list[status_index]->status = 'n';
+      status_index++;
+		}
+	}
+}
+
+
+char* formatted_filename(int i){
+  char* filename = (char*) malloc(sizeof(char)*255);
+  if(repofile_list[i]->check){
+    strcpy(filename, "[x] ");
+  }
+  else{
+    strcpy(filename, "[ ] ");
+  }
+  strcat(filename, repofile_list[i]->filename);
+  return filename; 
+}
+
+

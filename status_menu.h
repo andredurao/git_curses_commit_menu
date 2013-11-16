@@ -1,5 +1,6 @@
 #ifndef STATUS_MENU_H
 #define STATUS_MENU_H
+#include "git_status.h"
 
 int ch;
 int rows,cols;
@@ -14,5 +15,6 @@ void highlight();
 int left_center_col();
 int right_center_col();
 void print_files_menu();
+void check_row();
 
 #endif

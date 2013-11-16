@@ -9,6 +9,7 @@
 int main(int argc, char** argv){
   
   initial_check();
+  get_files_list();
 
   ESCDELAY = 1;
   menu_index = 0;
@@ -20,7 +21,6 @@ int main(int argc, char** argv){
   getmaxyx(stdscr,rows,cols);
   refresh();
 
-  display_branch();
   print_files_menu();
 
   //move(5,right_center_col());
@@ -40,12 +40,14 @@ int main(int argc, char** argv){
       case '?':
         show_help();
         break;
+      case ' ':
+        check_row();
+        break;
     }
     ch = getch();  
   }
   
   endwin();
-
   return(EXIT_SUCCESS);
 }
 
