@@ -3,11 +3,14 @@
 #include <curses.h>
 #include <string.h>
 #include "status_menu.h"
+#include "git_status.h"
 
 
 //TODO: try to only use the help as a window, the main window is the stdscr
 int main(int argc, char** argv){
   
+  initial_check();
+
   ESCDELAY = 1;
   menu_index = 0;
   previous_index =- 1;
@@ -23,7 +26,7 @@ int main(int argc, char** argv){
   //move(5,right_center_col());
   //printw("diff");
   ch = getch();  
-  while(ch != 27){
+  while(ch != 27 && ch != 'q'){
     switch(ch){
       case KEY_UP: 
         move_menu(-1);
