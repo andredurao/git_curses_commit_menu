@@ -8,6 +8,7 @@ int menu_index;
 int previous_index;
 
 void display_branch();
+void show_git_diff();
 void show_help();
 void move_menu(int);
 void highlight();
@@ -16,5 +17,6 @@ int left_center_col();
 int right_center_col();
 void print_files_menu();
 void check_row();
+int menu_length();
 
 #endif

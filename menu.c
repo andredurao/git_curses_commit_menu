@@ -19,6 +19,9 @@ int main(int argc, char** argv){
   noecho();
   keypad(stdscr, TRUE);
   getmaxyx(stdscr,rows,cols);
+  init_pair(3, COLOR_RED,     -1);
+  init_pair(2, COLOR_GREEN,   -1);
+  init_pair(4, COLOR_CYAN,    -1);
   refresh();
 
   print_files_menu();
