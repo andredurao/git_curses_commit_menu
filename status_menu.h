@@ -15,6 +15,7 @@ void highlight();
 //void print_center(char*);
 int left_center_col();
 int right_center_col();
+int center_col();
 void print_files_menu();
 void check_row();
 int menu_length();

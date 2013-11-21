@@ -6,6 +6,11 @@
 #include "git_status.h"
 
 
+int maind(int argc, char** argv){
+  printf("main\n");
+  initial_check();
+  get_files_list();
+}
 int main(int argc, char** argv){
   
   initial_check();
@@ -19,9 +24,12 @@ int main(int argc, char** argv){
   noecho();
   keypad(stdscr, TRUE);
   getmaxyx(stdscr,rows,cols);
-  init_pair(3, COLOR_RED,     -1);
+  diff_col_width = cols/2-1;
+  start_color();
+  use_default_colors();
+  init_pair(1, COLOR_RED,     -1);
   init_pair(2, COLOR_GREEN,   -1);
-  init_pair(4, COLOR_CYAN,    -1);
+  init_pair(3, COLOR_CYAN,    -1);
   refresh();
 
   print_files_menu();

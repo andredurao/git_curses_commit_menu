@@ -21,31 +21,24 @@ int printer(
 	size_t line_len,
 	void *data)
 {
-	int *last_color = data, color = 0;
+	int color = 0;
+  char formatted_line[255];
 
 	(void)delta; (void)range; (void)line_len;
 
-//	if (*last_color >= 0) {
 		switch (usage) {
-		case GIT_DIFF_LINE_ADDITION: attron(COLOR_PAIR(3)); break; //3 green
-		case GIT_DIFF_LINE_DELETION: attron(COLOR_PAIR(2)); break; //2 red
-		case GIT_DIFF_LINE_ADD_EOFNL: attron(COLOR_PAIR(3)); break; //3 green
-		case GIT_DIFF_LINE_DEL_EOFNL: attron(COLOR_PAIR(2)); break; //2 red
+		case GIT_DIFF_LINE_ADDITION: attron(COLOR_PAIR(2)); break; //3 green
+		case GIT_DIFF_LINE_DELETION: attron(COLOR_PAIR(1)); break; //2 red
+		case GIT_DIFF_LINE_ADD_EOFNL: attron(COLOR_PAIR(2)); break; //3 green
+		case GIT_DIFF_LINE_DEL_EOFNL: attron(COLOR_PAIR(1)); break; //2 red
 		case GIT_DIFF_LINE_FILE_HDR: attron(COLOR_PAIR(1)); break; //1 bold
-		case GIT_DIFF_LINE_HUNK_HDR: attron(COLOR_PAIR(4)); break; //4 cyan
+		case GIT_DIFF_LINE_HUNK_HDR: attron(COLOR_PAIR(3)); break; //4 cyan
 		default: color = 0;
 		}
-/*		if (color != *last_color) {
-			if (*last_color == 1 || color == 1)
-				fputs(colors[0], stdout);
-			fputs(colors[color], stdout);
-			*last_color = color;
-		}
-	}*/
 
-	//fputs(line, stdout);
-  
-  mvprintw(diff_start_row, diff_start_col, line);
+  //TODO: Clear \t characters which are trashing the output or replace them with \s
+  strlcpy(formatted_line, line, diff_col_width);
+  mvprintw(diff_start_row, diff_start_col, formatted_line);
   diff_start_row += 1;
 	return 0;
 }
@@ -130,35 +123,24 @@ void get_files_list(){
   
 	size_t i;
   maxi = git_status_list_entrycount(status);
-	//const git_status_entry *s;
+  const git_status_entry *s;
 
   repofile_list = (repofile**) malloc(maxi * sizeof(repofile));
   status_index = 0;
 	for (i = 0; i < maxi; ++i) {
-    repofile_list[i] = (repofile*) malloc(sizeof(repofile));
-    strcpy(repofile_list[i]->filename,""); 
-    repofile_list[i]->check = FALSE;
-	}
-  get_files_by_status(GIT_STATUS_WT_NEW, 'c');
-  get_files_by_status(GIT_STATUS_INDEX_MODIFIED, 'c');
-  get_files_by_status(GIT_STATUS_INDEX_DELETED, 'c');
-  get_files_by_status(GIT_STATUS_INDEX_RENAMED, 'c');
-  get_files_by_status(GIT_STATUS_INDEX_TYPECHANGE, 'c');
-}
-
-//TODO: Use the same GIT_STATUS type on the marks
-void get_files_by_status(int status_filter, char mark){
-	size_t i;
-	const git_status_entry *s;
-	for (i = 0; i < maxi; ++i) {
 		s = git_status_byindex(status, i);
-		if (s->status == status_filter) {
-      strcpy(repofile_list[status_index]->filename,
-             s->index_to_workdir->old_file.path); 
-      repofile_list[status_index]->status = mark;
-      status_index++;
-		}
+    repofile_list[i] = (repofile*) malloc(sizeof(repofile));
+    strcpy(repofile_list[i]->filename,s->index_to_workdir->old_file.path); 
+    repofile_list[i]->status = s->status;
+    repofile_list[i]->check = FALSE;
+    printf("%s [%d] \n", s->index_to_workdir->old_file.path, s->status); 
 	}
+  /* statuses constants
+ GIT_STATUS_WT_NEW
+ GIT_STATUS_INDEX_MODIFIED
+ GIT_STATUS_INDEX_DELETED
+ GIT_STATUS_INDEX_RENAMED
+ GIT_STATUS_INDEX_TYPECHANGE*/
 }
 
 char* formatted_filename(int i){
@@ -177,9 +159,7 @@ char* filename(int i){
   return repofile_list[i]->filename;
 }
 
-
 void diff(char* filename, int row, int col){
-
   git_diff_list *diff = NULL;
   int color = 0;
 	git_diff_options opts = GIT_DIFF_OPTIONS_INIT;
@@ -189,5 +169,5 @@ void diff(char* filename, int row, int col){
   diff_start_row = row;
   diff_start_col = col;
 	git_diff_print_patch(diff, printer, &color);
-
+  attron(COLOR_PAIR(0));
 }

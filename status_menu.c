@@ -11,20 +11,26 @@ void display_branch(){
 
 void show_git_diff(){
   //TODO clear using curses
-  mvprintw(4, right_center_col(), "                  ");
-  mvprintw(4, right_center_col(), filename(menu_index));
-  mvprintw(6, right_center_col(), "");
+  int y=0;
+  for(y = 4 ; y < cols ; y++){
+    move(y,center_col());
+    clrtoeol();
+  }
+  refresh();
+  mvprintw(4, center_col(), filename(menu_index));
   //TODO: print inside a curses box
 
-  diff(filename(menu_index), 7, right_center_col());
+  diff(filename(menu_index), 7, center_col());
 }
 
 void show_help(){
   clear();
+  attron(COLOR_PAIR(2));
   mvprintw(0, 0, "Help");
   getch();
   clear();
   print_files_menu();
+  show_git_diff();
 }
 
 void move_menu(int dir){  
@@ -49,6 +55,10 @@ int left_center_col(){
 
 int right_center_col(){
   return cols*3/4;
+}
+
+int center_col(){
+  return cols/2+1;
 }
 
 void print_files_menu(){
