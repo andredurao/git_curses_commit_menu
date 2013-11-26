@@ -12,7 +12,7 @@ typedef struct repofile {
 } repofile;
 
 
-int i, npaths, zterm, diff_start_row, diff_start_col, diff_col_width;
+int i, npaths, zterm, diff_start_row, diff_start_col, diff_col_width, max_file_length;
 struct git_repository *repo;
 struct git_status_list *status;
 char *repodir, *pathspec[MAX_PATHSPEC];

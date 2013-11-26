@@ -125,16 +125,21 @@ void get_files_list(){
   maxi = git_status_list_entrycount(status);
   const git_status_entry *s;
 
+  max_file_length = -1;
+
   repofile_list = (repofile**) malloc(maxi * sizeof(repofile));
   status_index = 0;
-	for (i = 0; i < maxi; ++i) {
+	for (i = 0; i < maxi; i++) {
 		s = git_status_byindex(status, i);
     repofile_list[i] = (repofile*) malloc(sizeof(repofile));
     strcpy(repofile_list[i]->filename,s->index_to_workdir->old_file.path); 
     repofile_list[i]->status = s->status;
     repofile_list[i]->check = FALSE;
-    printf("%s [%d] \n", s->index_to_workdir->old_file.path, s->status); 
+    printf("--%s [%d] \n", s->index_to_workdir->old_file.path, s->status);
+    if ((int)strlen(s->index_to_workdir->old_file.path) > max_file_length)
+      max_file_length = strlen(s->index_to_workdir->old_file.path);
 	}
+  max_file_length+=4;
   /* statuses constants
  GIT_STATUS_WT_NEW
  GIT_STATUS_INDEX_MODIFIED

@@ -13,14 +13,14 @@ void show_git_diff(){
   //TODO clear using curses
   int y=0;
   for(y = 4 ; y < cols ; y++){
-    move(y,center_col());
+    move(y,max_file_length+2);
     clrtoeol();
   }
   refresh();
-  mvprintw(4, center_col(), filename(menu_index));
+  mvprintw(4, max_file_length+2, filename(menu_index));
   //TODO: print inside a curses box
 
-  diff(filename(menu_index), 7, center_col());
+  diff(filename(menu_index), 7, max_file_length+2);
 }
 
 void show_help(){
@@ -37,12 +37,12 @@ void move_menu(int dir){
   previous_index = menu_index;
   menu_index= (menu_index+menu_length()+dir) % menu_length();
   show_git_diff();
-  mvchgat(5+previous_index, left_center_col(), 6, A_NORMAL, 0, NULL);
+  mvchgat(5+previous_index, 2, max_file_length, A_NORMAL, 0, NULL);
   highlight();
 }
 
 void highlight(){
-  mvchgat(5+menu_index, left_center_col(), 6, A_REVERSE, 0, NULL);
+  mvchgat(5+menu_index, 2, max_file_length, A_REVERSE, 0, NULL);
 }
 
 /*void print_center(char* mesg){
@@ -67,7 +67,7 @@ void print_files_menu(){
   display_branch();
 
 	for (i = 0; i < maxi; ++i) {
-    mvprintw(5+i, left_center_col(), formatted_filename(i));
+    mvprintw(5+i, 2, formatted_filename(i));
   }
   highlight();
 }
