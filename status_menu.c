@@ -78,5 +78,5 @@ void check_row(){
 }
 
 int menu_length(){
-  return maxi+1;
+  return maxi;
 }
