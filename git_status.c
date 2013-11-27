@@ -135,7 +135,7 @@ void get_files_list(){
     strcpy(repofile_list[i]->filename,s->index_to_workdir->old_file.path); 
     repofile_list[i]->status = s->status;
     repofile_list[i]->check = FALSE;
-    printf("--%s [%d] \n", s->index_to_workdir->old_file.path, s->status);
+    //printf("--%s [%d] \n", s->index_to_workdir->old_file.path, s->status);
     if ((int)strlen(s->index_to_workdir->old_file.path) > max_file_length)
       max_file_length = strlen(s->index_to_workdir->old_file.path);
 	}
