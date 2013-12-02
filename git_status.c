@@ -23,22 +23,25 @@ int printer(
 {
 	int color = 0;
   char formatted_line[255];
+  char linenumber[10];
 
 	(void)delta; (void)range; (void)line_len;
 
 		switch (usage) {
-		case GIT_DIFF_LINE_ADDITION: attron(COLOR_PAIR(2)); break; //3 green
-		case GIT_DIFF_LINE_DELETION: attron(COLOR_PAIR(1)); break; //2 red
-		case GIT_DIFF_LINE_ADD_EOFNL: attron(COLOR_PAIR(2)); break; //3 green
-		case GIT_DIFF_LINE_DEL_EOFNL: attron(COLOR_PAIR(1)); break; //2 red
-		case GIT_DIFF_LINE_FILE_HDR: attron(COLOR_PAIR(1)); break; //1 bold
-		case GIT_DIFF_LINE_HUNK_HDR: attron(COLOR_PAIR(3)); break; //4 cyan
+		case GIT_DIFF_LINE_ADDITION:  wattron(diff_window, COLOR_PAIR(2)); break; //3 green
+		case GIT_DIFF_LINE_DELETION:  wattron(diff_window, COLOR_PAIR(1)); break; //2 red
+		case GIT_DIFF_LINE_ADD_EOFNL: wattron(diff_window, COLOR_PAIR(2)); break; //3 green
+		case GIT_DIFF_LINE_DEL_EOFNL: wattron(diff_window, COLOR_PAIR(1)); break; //2 red
+		case GIT_DIFF_LINE_FILE_HDR:  wattron(diff_window, COLOR_PAIR(1)); break; //1 bold
+		case GIT_DIFF_LINE_HUNK_HDR:  wattron(diff_window, COLOR_PAIR(3)); break; //4 cyan
 		default: color = 0;
 		}
 
-  //TODO: Clear \t characters which are trashing the output or replace them with \s
   strlcpy(formatted_line, line, diff_col_width);
-  mvprintw(diff_start_row, diff_start_col, formatted_line);
+  snprintf(linenumber, 10, " [%d]", diff_start_row);
+  strlcat(formatted_line, linenumber, 10);
+  //mvprintw(diff_start_row, diff_start_col, formatted_line);
+  mvwprintw(diff_window, diff_start_row, diff_start_col, formatted_line);
   diff_start_row += 1;
 	return 0;
 }
@@ -164,15 +167,18 @@ char* filename(int i){
   return repofile_list[i]->filename;
 }
 
-void diff(char* filename, int row, int col){
+void diff(char* filename, WINDOW* diff_window){
   git_diff_list *diff = NULL;
   int color = 0;
 	git_diff_options opts = GIT_DIFF_OPTIONS_INIT;
   opts.pathspec.strings = &filename;
   opts.pathspec.count   = 1;
   git_diff_index_to_workdir(&diff, repo, NULL, &opts);
-  diff_start_row = row;
-  diff_start_col = col;
+  diff_start_row = 1;
+  diff_start_col = 1;
+  wrefresh(diff_window);
+  getmaxyx(diff_window,diff_col_height,diff_col_width);
 	git_diff_print_patch(diff, printer, &color);
+  wrefresh(diff_window);
   attron(COLOR_PAIR(0));
 }

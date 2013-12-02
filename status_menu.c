@@ -6,29 +6,43 @@
 #include "git_status.h"
 
 void display_branch(){
-  mvprintw(4, left_center_col(), get_branch_name());
+  mvprintw(0, 0, get_branch_name());
 }
 
 void show_git_diff(){
   //TODO clear using curses
   int y=0;
-  for(y = 4 ; y < cols ; y++){
-    move(y,max_file_length+2);
+  int diff_col = max_file_length + 2;
+  for(y = 0 ; y < cols ; y++){
+    move(y,diff_col);
     clrtoeol();
   }
   refresh();
-  mvprintw(4, max_file_length+2, filename(menu_index));
-  //TODO: print inside a curses box
-
-  diff(filename(menu_index), 7, max_file_length+2);
+  mvprintw(0, diff_col, filename(menu_index));
+  
+  diff_window = newwin(rows - 4, cols - diff_col, 2, diff_col);
+  diff(filename(menu_index), diff_window);
+  //TODO free window after showing
 }
+
+//TODO: Write help explanations, commands and what they do
 
 void show_help(){
   clear();
-  attron(COLOR_PAIR(2));
+  attron(COLOR_PAIR(0));
   mvprintw(0, 0, "Help");
+  mvprintw(2, 0, "Command       Action");
+  mvprintw(3, 0, "UP & DOWN     choose between files");
+  mvprintw(4, 0, "Space         select/deselect a file");
+  mvprintw(5, 0, "A             select/deselect all files");
+  mvprintw(6, 0, "C / Enter     commit selected files");
+  mvprintw(7, 0, "Q / Esc       Quit");
+  mvprintw(8, 0, "H / ?         Help");
+  mvprintw(rows-1, 0, "Press any key to continue...");
+  
   getch();
   clear();
+  attron(COLOR_PAIR(0));
   print_files_menu();
   show_git_diff();
 }
@@ -44,10 +58,6 @@ void move_menu(int dir){
 void highlight(){
   mvchgat(5+menu_index, 2, max_file_length, A_REVERSE, 0, NULL);
 }
-
-/*void print_center(char* mesg){
-  mvprintw(rows/2,(cols-strlen(mesg))/2,"%s",mesg);
-}*/
 
 int left_center_col(){
   return cols/4;

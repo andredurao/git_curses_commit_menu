@@ -12,13 +12,13 @@ typedef struct repofile {
 } repofile;
 
 
-int i, npaths, zterm, diff_start_row, diff_start_col, diff_col_width, max_file_length;
+int i, npaths, zterm, diff_start_row, diff_start_col, diff_col_width, diff_col_height, max_file_length;
 struct git_repository *repo;
 struct git_status_list *status;
 char *repodir, *pathspec[MAX_PATHSPEC];
 repofile **repofile_list;
 size_t maxi, status_index;
-
+WINDOW *diff_window; 
 
 int printer(
 	const git_diff_delta *delta,
@@ -45,6 +45,6 @@ char* formatted_filename(int);
 
 char* filename(int);
 
-void diff(char*,int, int);
+void diff(char*, WINDOW*);
 
 #endif
