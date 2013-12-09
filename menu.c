@@ -54,6 +54,12 @@ int main(int argc, char** argv){
       case ' ':
         check_row();
         break;
+      case 'a':
+        check_all();
+        break;
+      case 'c':
+        open_commit_window();
+        break;
     }
     ch = getch();  
   }

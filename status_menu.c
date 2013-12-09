@@ -87,6 +87,20 @@ void check_row(){
   print_files_menu();
 }
 
+void check_all(){
+	for (i = 0; i < maxi; ++i) {
+    repofile_list[i]->check = !repofile_list[i]->check;
+  }
+  print_files_menu();
+}
+
 int menu_length(){
   return maxi;
+}
+
+
+void open_commit_window(){
+  //TODO: Initialize a ncurses screen to input the commit message when the user has selected one or more files
+  //After that iterate through the chosen files and add them to the index via: 
+  //int git_index_add_bypath(git_index *index, const char *path);
 }

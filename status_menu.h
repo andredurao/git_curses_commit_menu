@@ -6,6 +6,7 @@ int ch;
 int rows,cols;
 int menu_index;
 int previous_index;
+WINDOW *diff_window; 
 
 void display_branch();
 void show_git_diff();
@@ -18,6 +19,9 @@ int right_center_col();
 int center_col();
 void print_files_menu();
 void check_row();
+void check_all();
 int menu_length();
+
+void open_commit_window();
 
 #endif
