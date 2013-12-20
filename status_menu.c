@@ -22,7 +22,7 @@ void show_git_diff(){
   
   diff_window = newwin(rows - 4, cols - diff_col, 2, diff_col);
   diff(filename(menu_index), diff_window);
-  //TODO free window after showing
+  delwin(diff_window);
 }
 
 //TODO: Write help explanations, commands and what they do
@@ -100,7 +100,14 @@ int menu_length(){
 
 
 void open_commit_window(){
-  //TODO: Initialize a ncurses screen to input the commit message when the user has selected one or more files
+  mvprintw(rows - 3, 1, "Commit message: ");
+  move(rows - 2, 1);
+  echo();
+  refresh();
+  scanw("%s", msg);
+  noecho();
+  refresh();
+  
   //After that iterate through the chosen files and add them to the index via: 
   //int git_index_add_bypath(git_index *index, const char *path);
 }
