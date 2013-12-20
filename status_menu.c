@@ -10,7 +10,6 @@ void display_branch(){
 }
 
 void show_git_diff(){
-  //TODO clear using curses
   int y=0;
   int diff_col = max_file_length + 2;
   for(y = 0 ; y < cols ; y++){

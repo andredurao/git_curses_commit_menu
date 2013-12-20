@@ -20,7 +20,7 @@ int printer(
 	const char *line,
 	size_t line_len,
 	void *data)
-{
+{ //TODO: get the same colors used in .git/config if there are any
 	int color = 0;
   char formatted_line[255];
   char linenumber[10];
@@ -38,9 +38,8 @@ int printer(
 		}
 
   strlcpy(formatted_line, line, diff_col_width);
-  snprintf(linenumber, 10, " [%d]", diff_start_row);
-  strlcat(formatted_line, linenumber, 10);
-  //mvprintw(diff_start_row, diff_start_col, formatted_line);
+  /*snprintf(linenumber, 10, " [%d]", diff_start_row);
+  strlcat(formatted_line, linenumber, 10);*/
   mvwprintw(diff_window, diff_start_row, diff_start_col, formatted_line);
   diff_start_row += 1;
 	return 0;

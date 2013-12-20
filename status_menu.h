@@ -7,6 +7,7 @@ int rows,cols;
 int menu_index;
 int previous_index;
 WINDOW *diff_window; 
+char msg[360];
 
 void display_branch();
 void show_git_diff();

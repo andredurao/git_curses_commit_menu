@@ -6,11 +6,6 @@
 #include "git_status.h"
 
 
-int maind(int argc, char** argv){
-  printf("main\n");
-  initial_check();
-  get_files_list();
-}
 int main(int argc, char** argv){
   
   initial_check();
