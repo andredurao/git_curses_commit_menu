@@ -48,14 +48,16 @@ void initial_check(){
 	opt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED | GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX | GIT_STATUS_OPT_SORT_CASE_SENSITIVELY;
   repodir = ".";
 	
-  check(git_repository_open_ext(&repo, repodir, 0, NULL), "Could not open repository", repodir);
+  if( git_repository_open(&repo, repodir) != 0)
+    exit(1);
 
 	if (git_repository_is_bare(repo))
 		fail("Cannot report status on bare repository");
 
 	check(git_status_list_new(&status, repo, &opt), "Could not get status", NULL);
 
-  git_repository_index(&my_repo_index, repo);
+  if( git_repository_index(&my_repo_index, repo) < 0 )
+    exit(1);//TODO: print error message
 
 }
 
@@ -74,11 +76,9 @@ void check(int error, const char *message, const char *extra)
 	}
 
 	if (extra)
-		fprintf(stderr, "%s '%s' [%d]%s%s\n",
-			message, extra, error, lg2spacer, lg2msg);
+		fprintf(stderr, "%s '%s' [%d]%s%s\n", message, extra, error, lg2spacer, lg2msg);
 	else
-		fprintf(stderr, "%s [%d]%s%s\n",
-			message, error, lg2spacer, lg2msg);
+		fprintf(stderr, "%s [%d]%s%s\n", message, error, lg2spacer, lg2msg);
 
 	exit(1);
 }

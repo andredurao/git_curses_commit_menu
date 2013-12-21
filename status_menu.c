@@ -102,16 +102,19 @@ void open_commit_window(){
   mvprintw(rows - 3, 1, "Commit message: ");
   move(rows - 2, 1);
   echo();
-  refresh();
   scanw("%s", msg);
   noecho();
-  refresh();
   
   int i=0;
 
 	for (i = 0; i < maxi; ++i) {
     if(repofile_list[i]->check){
-      git_index_add_bypath(my_repo_index, repofile_list[i]->filename);
+      printf("file: [%s] result[%d]", repofile_list[i]->filename, git_index_add_bypath(my_repo_index, repofile_list[i]->filename));
     }
   }
+  git_index_write(my_repo_index);
+  git_index_free(my_repo_index);
+  git_repository_free(repo);
+  endwin();
+  exit(EXIT_SUCCESS);
 }
