@@ -107,6 +107,11 @@ void open_commit_window(){
   noecho();
   refresh();
   
-  //After that iterate through the chosen files and add them to the index via: 
-  //int git_index_add_bypath(git_index *index, const char *path);
+  int i=0;
+
+	for (i = 0; i < maxi; ++i) {
+    if(repofile_list[i]->check){
+      git_index_add_bypath(my_repo_index, repofile_list[i]->filename);
+    }
+  }
 }

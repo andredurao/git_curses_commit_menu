@@ -1,10 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <curses.h>
-#include <string.h>
-#include <git2.h>
 #include "git_status.h"
-
+// TODO: FOLLOW THESE SAMPLES: http://libgit2.github.com/docs/guides/101-samples/
 char *colors[] = {
 	"\033[m", /* reset */
 	"\033[1m", /* bold */
@@ -23,7 +18,6 @@ int printer(
 { //TODO: get the same colors used in .git/config if there are any
 	int color = 0;
   char formatted_line[255];
-  char linenumber[10];
 
 	(void)delta; (void)range; (void)line_len;
 
@@ -38,8 +32,6 @@ int printer(
 		}
 
   strlcpy(formatted_line, line, diff_col_width);
-  /*snprintf(linenumber, 10, " [%d]", diff_start_row);
-  strlcat(formatted_line, linenumber, 10);*/
   mvwprintw(diff_window, diff_start_row, diff_start_col, formatted_line);
   diff_start_row += 1;
 	return 0;
@@ -56,17 +48,18 @@ void initial_check(){
 	opt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED | GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX | GIT_STATUS_OPT_SORT_CASE_SENSITIVELY;
   repodir = ".";
 	
-  check(git_repository_open_ext(&repo, repodir, 0, NULL),
-		  "Could not open repository", repodir);
+  check(git_repository_open_ext(&repo, repodir, 0, NULL), "Could not open repository", repodir);
 
 	if (git_repository_is_bare(repo))
 		fail("Cannot report status on bare repository");
 
-	check(git_status_list_new(&status, repo, &opt),
-		  "Could not get status", NULL);
+	check(git_status_list_new(&status, repo, &opt), "Could not get status", NULL);
+
+  git_repository_index(&my_repo_index, repo);
 
 }
 
+//TODO: Erase the check method and use the samples from the documentation
 void check(int error, const char *message, const char *extra)
 {
 	const git_error *lg2err;

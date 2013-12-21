@@ -5,6 +5,7 @@
 #include "status_menu.h"
 #include "git_status.h"
 
+//TODO: If a directory has none changed or new files the app should quit
 
 int main(int argc, char** argv){
   
