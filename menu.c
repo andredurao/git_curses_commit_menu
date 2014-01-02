@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <curses.h>
+#include <ncurses.h>
 #include <string.h>
 #include "status_menu.h"
 #include "git_status.h"

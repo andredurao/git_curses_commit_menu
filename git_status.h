@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <curses.h>
+#include <ncurses.h>
 #include <string.h>
 #include <git2.h>
 #include "git2/diff.h"
@@ -27,14 +27,7 @@ repofile **repofile_list;
 size_t maxi, status_index;
 WINDOW *diff_window; 
 
-int printer(
-	const git_diff_delta *delta,
-	const git_diff_range *range,
-	char usage,
-	const char *line,
-	size_t line_len,
-	void *data);
-
+int printer(const git_diff_delta*, const git_diff_hunk*, const git_diff_line*, void*);
 
 void initial_check();
 
