@@ -1,6 +1,12 @@
 
-#include "common.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <ncurses.h>
+#include <string.h>
 
+#include <git2.h>
+#include "git2/diff.h"
+#include "git2/repository.h"
 
 static const char *colors[] = {
 	"\033[m", /* reset */
@@ -25,6 +31,11 @@ struct opts {
 /** These functions are implemented at the end */
 static int color_printer(
 	const git_diff_delta*, const git_diff_hunk*, const git_diff_line*, void*);
+int diff_output(
+        const git_diff_delta *d,
+        const git_diff_hunk *h,
+        const git_diff_line *l,
+        void *p);
 
 int main(int argc, char *argv[])
 {
@@ -84,5 +95,28 @@ static int color_printer(
           fputs(colors[0], stdout);
         fputs(colors[color], stdout);
 	return diff_output(delta, hunk, line, stdout);
+}
+
+int diff_output(
+        const git_diff_delta *d,
+        const git_diff_hunk *h,
+        const git_diff_line *l,
+        void *p)
+{
+        FILE *fp = p;
+
+        (void)d; (void)h;
+
+        if (!fp)
+                fp = stdout;
+
+        if (l->origin == GIT_DIFF_LINE_CONTEXT ||
+                l->origin == GIT_DIFF_LINE_ADDITION ||
+                l->origin == GIT_DIFF_LINE_DELETION)
+                fputc(l->origin, fp);
+
+        fwrite(l->content, 1, l->content_len, fp);
+
+        return 0;
 }
 
