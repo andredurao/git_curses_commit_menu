@@ -8,13 +8,14 @@ int printer(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_di
   (void)delta; (void)hunk;
 
   wattron(diff_window, COLOR_PAIR(0)); 
-  switch (line->origin) {
-    case GIT_DIFF_LINE_ADDITION:  wattron(diff_window, COLOR_PAIR(2)); break; //3 green
-    case GIT_DIFF_LINE_DELETION:  wattron(diff_window, COLOR_PAIR(1)); break; //2 red
-    case GIT_DIFF_LINE_ADD_EOFNL: wattron(diff_window, COLOR_PAIR(2)); break; //3 green
-    case GIT_DIFF_LINE_DEL_EOFNL: wattron(diff_window, COLOR_PAIR(1)); break; //2 red
-    case GIT_DIFF_LINE_FILE_HDR:  wattron(diff_window, COLOR_PAIR(1)); break; //1 bold
-    case GIT_DIFF_LINE_HUNK_HDR:  wattron(diff_window, COLOR_PAIR(3)); break; //4 cyan
+  switch (line->origin) { //1 : red 2: green 3: cyan
+    case GIT_DIFF_LINE_ADDITION:  wattron(diff_window, COLOR_PAIR(2)); break;
+    case GIT_DIFF_LINE_DELETION:  wattron(diff_window, COLOR_PAIR(1)); break;
+    case GIT_DIFF_LINE_ADD_EOFNL: wattron(diff_window, COLOR_PAIR(2)); break;
+    case GIT_DIFF_LINE_DEL_EOFNL: wattron(diff_window, COLOR_PAIR(1)); break;
+    case GIT_DIFF_LINE_FILE_HDR:  wattron(diff_window, COLOR_PAIR(0)); break;
+    case GIT_DIFF_LINE_CONTEXT:   wattron(diff_window, COLOR_PAIR(0)); break;
+    case GIT_DIFF_LINE_HUNK_HDR:  wattron(diff_window, COLOR_PAIR(3)); break;
     default: break;
   }
 
@@ -23,7 +24,6 @@ int printer(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_di
   } else {
     mvwprintw(diff_window, diff_start_row, diff_start_col, "%s", line->content);
   }
-//    strncpy(formatted_line, line->content, diff_col_width);
   
   diff_start_row += 1;
   return 0;
@@ -148,7 +148,7 @@ void diff(char* filename, WINDOW* diff_window){
   opts.pathspec.count   = 1;
   git_diff_index_to_workdir(&diff, repo, NULL, &opts);
   diff_start_row = 1;
-  diff_start_col = 2;
+  diff_start_col = 0;
   wrefresh(diff_window);
   getmaxyx(diff_window,diff_col_height,diff_col_width);
   git_diff_print(diff, GIT_DIFF_FORMAT_PATCH, printer, &color);

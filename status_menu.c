@@ -19,7 +19,7 @@ void show_git_diff(){
   refresh();
   mvprintw(0, diff_col, filename(menu_index));
   
-  diff_window = newwin(rows - 4, cols - diff_col, 2, diff_col);
+  diff_window = newwin(rows - 4, cols - diff_col - 1, 2, diff_col + 1);
   diff(filename(menu_index), diff_window);
   delwin(diff_window);
 }

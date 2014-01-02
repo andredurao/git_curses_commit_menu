@@ -6,9 +6,12 @@
 #include "git_status.h"
 
 //TODO: If a directory has none changed or new files the app should quit
+//NEW LINE
 
 int main(int argc, char** argv){
   
+  git_threads_init();
+
   initial_check();
   get_files_list();
 
@@ -61,6 +64,7 @@ int main(int argc, char** argv){
   }
   
   endwin();
+  git_threads_shutdown();
   return(EXIT_SUCCESS);
 }
 
