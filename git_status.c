@@ -20,9 +20,9 @@ int printer(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_di
   }
 
   if (line->origin == GIT_DIFF_LINE_CONTEXT ||  line->origin == GIT_DIFF_LINE_ADDITION || line->origin == GIT_DIFF_LINE_DELETION){
-    mvwprintw(diff_window, diff_start_row, diff_start_col, "%c%s", line->origin, line->content);
+    mvwprintw(diff_window, diff_start_row, diff_start_col, "[%d]%c%s", diff_start_row, line->origin, line->content);
   } else {
-    mvwprintw(diff_window, diff_start_row, diff_start_col, "%s", line->content);
+    mvwprintw(diff_window, diff_start_row, diff_start_col, "[%d]%s", diff_start_row, line->content);
   }
   
   diff_start_row += 1;
@@ -40,13 +40,13 @@ void initial_check(){
   opt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED | GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX | GIT_STATUS_OPT_SORT_CASE_SENSITIVELY;
   repodir = ".";
 	
-  if( git_repository_open(&repo, repodir) != 0)
+  if(git_repository_open(&repo, repodir) != 0)
     exit(1);
   if (git_repository_is_bare(repo))
     fail("Cannot report status on bare repository");
   check(git_status_list_new(&status, repo, &opt), "Could not get status", NULL);
 
-  if( git_repository_index(&my_repo_index, repo) < 0 )
+  if(git_repository_index(&my_repo_index, repo) < 0 )
     exit(1);//TODO: print error message
 
 }
