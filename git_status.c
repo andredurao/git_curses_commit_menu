@@ -4,7 +4,7 @@
 int printer(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_diff_line *line, void *data){ 
   //TODO: get the same colors used in .git/config if there are any
   int color = 0;
-  char formatted_line[255];
+  char *formatted_line, *cp;
   (void)delta; (void)hunk;
 
   wattron(diff_window, COLOR_PAIR(0)); 
@@ -15,17 +15,20 @@ int printer(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_di
     case GIT_DIFF_LINE_DEL_EOFNL: wattron(diff_window, COLOR_PAIR(1)); break;
     case GIT_DIFF_LINE_FILE_HDR:  wattron(diff_window, COLOR_PAIR(0)); break;
     case GIT_DIFF_LINE_CONTEXT:   wattron(diff_window, COLOR_PAIR(0)); break;
-    case GIT_DIFF_LINE_HUNK_HDR:  wattron(diff_window, COLOR_PAIR(3)); break;
+    case GIT_DIFF_LINE_HUNK_HDR:  wattron(diff_window, COLOR_PAIR(0)); break;
     default: break;
   }
+  cp = strdup(line->content); 
+  formatted_line = strtok(cp, "\n");
 
   if (line->origin == GIT_DIFF_LINE_CONTEXT ||  line->origin == GIT_DIFF_LINE_ADDITION || line->origin == GIT_DIFF_LINE_DELETION){
-    mvwprintw(diff_window, diff_start_row, diff_start_col, "[%d]%c%s", diff_start_row, line->origin, line->content);
+    mvwprintw(diff_window, diff_start_row, diff_start_col, "%c%s", line->origin, formatted_line);
   } else {
-    mvwprintw(diff_window, diff_start_row, diff_start_col, "[%d]%s", diff_start_row, line->content);
+    mvwprintw(diff_window, diff_start_row, diff_start_col, "%s", formatted_line);
   }
   
   diff_start_row += 1;
+  wattron(diff_window, COLOR_PAIR(0)); 
   return 0;
 }
 
@@ -40,8 +43,7 @@ void initial_check(){
   opt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED | GIT_STATUS_OPT_RENAMES_HEAD_TO_INDEX | GIT_STATUS_OPT_SORT_CASE_SENSITIVELY;
   repodir = ".";
 	
-  if(git_repository_open(&repo, repodir) != 0)
-    exit(1);
+  git_repository_open_ext(&repo, repodir, 0, NULL);
   if (git_repository_is_bare(repo))
     fail("Cannot report status on bare repository");
   check(git_status_list_new(&status, repo, &opt), "Could not get status", NULL);

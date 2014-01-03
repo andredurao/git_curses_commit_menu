@@ -6,6 +6,7 @@
 #include "git_status.h"
 
 //TODO: If a directory has none changed or new files the app should quit
+//FIX: Why this version prints more than 3 lines of diff?
 
 int main(int argc, char** argv){
   
