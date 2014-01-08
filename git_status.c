@@ -22,9 +22,9 @@ int printer(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_di
   formatted_line = strtok(cp, "\n");
 
   if (line->origin == GIT_DIFF_LINE_CONTEXT ||  line->origin == GIT_DIFF_LINE_ADDITION || line->origin == GIT_DIFF_LINE_DELETION){
-    mvwprintw(diff_window, diff_start_row, diff_start_col, "%c%s", line->origin, formatted_line);
+    mvwprintw(diff_window, diff_start_row, diff_start_col, "[%2d][%3d] %c%s", diff_start_row, line->origin, line->origin, formatted_line);
   } else {
-    mvwprintw(diff_window, diff_start_row, diff_start_col, "%s", formatted_line);
+    mvwprintw(diff_window, diff_start_row, diff_start_col, "[%2d][%3d] %s", diff_start_row, line->origin, formatted_line);
   }
   
   diff_start_row += 1;
@@ -54,8 +54,7 @@ void initial_check(){
 }
 
 //TODO: Erase the check method and use the samples from the documentation
-void check(int error, const char *message, const char *extra)
-{
+void check(int error, const char *message, const char *extra){
   const git_error *lg2err;
   const char *lg2msg = "", *lg2spacer = "";
 
@@ -74,14 +73,12 @@ void check(int error, const char *message, const char *extra)
   exit(1);
 }
 
-void fail(const char *message)
-{
+void fail(const char *message){
   check(-1, message, NULL);
 }
 
 
-char* get_branch_name()
-{
+char* get_branch_name(){
   int error = 0;
   const char *branch_name = NULL;
   git_reference *head = NULL;

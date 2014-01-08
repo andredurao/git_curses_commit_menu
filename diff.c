@@ -1,59 +1,27 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
 #include <string.h>
-
 #include <git2.h>
 #include "git2/diff.h"
 #include "git2/repository.h"
 
-static const char *colors[] = {
-	"\033[m", /* reset */
-	"\033[1m", /* bold */
-	"\033[31m", /* red */
-	"\033[32m", /* green */
-	"\033[36m" /* cyan */
-};
+static const char *colors[] = {	"\033[m","\033[1m", "\033[31m",	"\033[32m","\033[36m"}; /* reset bold red green cyan */
+struct opts {git_diff_options diffopts;	git_diff_find_options findopts; int color; git_diff_format_t format; const char *dir; };
 
-/** The 'opts' struct captures all the various parsed command line options. */
-struct opts {
-	git_diff_options diffopts;
-	git_diff_find_options findopts;
-	int color;
-	int cached;
-	git_diff_format_t format;
-	const char *treeish1;
-	const char *treeish2;
-	const char *dir;
-};
+static int color_printer(const git_diff_delta*, const git_diff_hunk*, const git_diff_line*, void*);
+int diff_output(const git_diff_delta *d, const git_diff_hunk *h, const git_diff_line *l, void *p);
 
-/** These functions are implemented at the end */
-static int color_printer(
-	const git_diff_delta*, const git_diff_hunk*, const git_diff_line*, void*);
-int diff_output(
-        const git_diff_delta *d,
-        const git_diff_hunk *h,
-        const git_diff_line *l,
-        void *p);
-
-int main(int argc, char *argv[])
-{
-
-        char* filename="menu.c";
+int main(int argc, char *argv[]){
+        char* filename=argv[1];
 	git_repository *repo = NULL;
 	git_diff *diff;
-	struct opts o = {
-		GIT_DIFF_OPTIONS_INIT, GIT_DIFF_FIND_OPTIONS_INIT,
-		0, 0, GIT_DIFF_FORMAT_PATCH, NULL, NULL, "."
-	};
-
+	struct opts o = { GIT_DIFF_OPTIONS_INIT, GIT_DIFF_FIND_OPTIONS_INIT, 0, GIT_DIFF_FORMAT_PATCH, "." };
 	git_threads_init();
 
 	git_repository_open_ext(&repo, o.dir, 0, NULL);
 
-        o.diffopts.pathspec.strings = &filename;
-        o.diffopts.pathspec.count   = 1;
+        o.diffopts.pathspec.strings = &filename;  o.diffopts.pathspec.count   = 1;
 
 	git_diff_index_to_workdir(&diff, repo, NULL, &o.diffopts);
 
@@ -61,7 +29,6 @@ int main(int argc, char *argv[])
 	git_diff_print(diff, o.format, color_printer, &o.color);
 	fputs(colors[0], stdout);
 
-	/** Cleanup before exiting. */
 	git_diff_free(diff);
 	git_repository_free(repo);
 
@@ -70,14 +37,9 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-/** This implements very rudimentary colorized output. */
-static int color_printer(
-	const git_diff_delta *delta,
-	const git_diff_hunk *hunk,
-	const git_diff_line *line,
-	void *data)
-{
+static int color_printer(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_diff_line *line, void *data){
 	int color = 0;
+        char str[255]="\0";
 
 	(void)delta; (void)hunk;
 
@@ -91,32 +53,12 @@ static int color_printer(
           default: break;
         }
 
-        if (color == 1)
-          fputs(colors[0], stdout);
-        fputs(colors[color], stdout);
-	return diff_output(delta, hunk, line, stdout);
-}
+        printf("%s", colors[color]);
+        if (line->origin == GIT_DIFF_LINE_CONTEXT || line->origin == GIT_DIFF_LINE_ADDITION || line->origin == GIT_DIFF_LINE_DELETION)
+          printf("%c",line->origin);
+        strncpy(str, line->content, line->content_len);
+        printf("%s", str);
 
-int diff_output(
-        const git_diff_delta *d,
-        const git_diff_hunk *h,
-        const git_diff_line *l,
-        void *p)
-{
-        FILE *fp = p;
-
-        (void)d; (void)h;
-
-        if (!fp)
-                fp = stdout;
-
-        if (l->origin == GIT_DIFF_LINE_CONTEXT ||
-                l->origin == GIT_DIFF_LINE_ADDITION ||
-                l->origin == GIT_DIFF_LINE_DELETION)
-                fputc(l->origin, fp);
-
-        fwrite(l->content, 1, l->content_len, fp);
-
-        return 0;
+	return 0;
 }
 
