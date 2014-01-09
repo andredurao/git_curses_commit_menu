@@ -4,31 +4,30 @@
 int printer(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_diff_line *line, void *data){ 
   //TODO: get the same colors used in .git/config if there are any
   int color = 0;
-  char *formatted_line, *cp;
+  char linebuffer[1024] = "\0";
   (void)delta; (void)hunk;
 
-  wattron(diff_window, COLOR_PAIR(0)); 
+  wattrset(diff_window, 0);
   switch (line->origin) { //1 : red 2: green 3: cyan
+    case GIT_DIFF_LINE_CONTEXT:   wattrset(diff_window, 0); break;
     case GIT_DIFF_LINE_ADDITION:  wattron(diff_window, COLOR_PAIR(2)); break;
     case GIT_DIFF_LINE_DELETION:  wattron(diff_window, COLOR_PAIR(1)); break;
     case GIT_DIFF_LINE_ADD_EOFNL: wattron(diff_window, COLOR_PAIR(2)); break;
     case GIT_DIFF_LINE_DEL_EOFNL: wattron(diff_window, COLOR_PAIR(1)); break;
-    case GIT_DIFF_LINE_FILE_HDR:  wattron(diff_window, COLOR_PAIR(0)); break;
-    case GIT_DIFF_LINE_CONTEXT:   wattron(diff_window, COLOR_PAIR(0)); break;
-    case GIT_DIFF_LINE_HUNK_HDR:  wattron(diff_window, COLOR_PAIR(0)); break;
+    case GIT_DIFF_LINE_FILE_HDR:  wattron(diff_window, A_BOLD);        break;
+    case GIT_DIFF_LINE_HUNK_HDR:  wattron(diff_window, COLOR_PAIR(3)); break;
     default: break;
   }
-  cp = strdup(line->content); 
-  formatted_line = strtok(cp, "\n");
-
+  
+  strncpy(linebuffer, line->content, line->content_len);
   if (line->origin == GIT_DIFF_LINE_CONTEXT ||  line->origin == GIT_DIFF_LINE_ADDITION || line->origin == GIT_DIFF_LINE_DELETION){
-    mvwprintw(diff_window, diff_start_row, diff_start_col, "[%2d][%3d] %c%s", diff_start_row, line->origin, line->origin, formatted_line);
+    mvwprintw(diff_window, diff_start_row, diff_start_col, "%c%s", line->origin, linebuffer);
   } else {
-    mvwprintw(diff_window, diff_start_row, diff_start_col, "[%2d][%3d] %s", diff_start_row, line->origin, formatted_line);
+    mvwprintw(diff_window, diff_start_row, diff_start_col, "%s", linebuffer);
   }
   
   diff_start_row += 1;
-  wattron(diff_window, COLOR_PAIR(0)); 
+  wattroff(diff_window, A_BOLD); 
   return 0;
 }
 
