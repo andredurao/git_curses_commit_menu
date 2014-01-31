@@ -17,7 +17,7 @@ int main(int argc, char** argv){
 
   ESCDELAY = 1;
   menu_index = 0;
-  previous_index =- 1;
+  previous_index = -1;
   
   initscr();
   noecho();

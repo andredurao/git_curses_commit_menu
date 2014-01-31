@@ -3,7 +3,6 @@
 
 int printer(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_diff_line *line, void *data){ 
   //TODO: get the same colors used in .git/config if there are any
-  int color = 0;
   char linebuffer[1024] = "\0";
   (void)delta; (void)hunk;
 
