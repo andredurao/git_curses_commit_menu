@@ -6,6 +6,8 @@
 #include "git_status.h"
 
 //TODO: If a directory has none changed or new files the app should quit
+//TODO: If a repo has already modified, new or deleted files on the index they should
+//      start checked, before commit it should reset the unchecked files
 //FIX: Why this version prints more than 3 lines of diff?
 
 int main(int argc, char** argv){
@@ -67,5 +69,3 @@ int main(int argc, char** argv){
   git_threads_shutdown();
   return(EXIT_SUCCESS);
 }
-
-

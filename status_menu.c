@@ -107,13 +107,36 @@ void open_commit_window(){
   
   int i=0;
 
+  //Adding selected files on the index
 	for (i = 0; i < maxi; ++i) {
     if(repofile_list[i]->check){
-      printf("file: [%s] result[%d]", repofile_list[i]->filename, git_index_add_bypath(my_repo_index, repofile_list[i]->filename));
+      git_index_add_bypath(my_repo_index, repofile_list[i]->filename);
+      // printf("file: [%s] result[%d]",
+      //   repofile_list[i]->filename,
+      //   git_index_add_bypath(my_repo_index, repofile_list[i]->filename)
+      // );
     }
   }
+
+  //writing index
   git_index_write(my_repo_index);
   git_index_free(my_repo_index);
+
+  //Create commit signature
+  const char *email, *name;
+  git_config_get_string(&email, cfg, "user.email");
+  git_config_get_string(&name, cfg, "user.name");
+  git_signature_now(&signature, name, email);
+
+  //Create the commit
+  // git_commit_create_v(
+  //   &commit_id, /* out id */
+  //   repo,
+  //   "HEAD",
+  //   signature, signature, //author and commiter
+  //   NULL, /* use default message encoding */
+  //   msg, tree, 1, parent);
+
   git_repository_free(repo);
   endwin();
   exit(EXIT_SUCCESS);

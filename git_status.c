@@ -49,6 +49,7 @@ void initial_check(){
   if(git_repository_index(&my_repo_index, repo) < 0 )
     exit(1);//TODO: print error message
 
+  git_config_open_ondisk(&cfg, ".git/config");
 }
 
 //TODO: Erase the check method and use the samples from the documentation

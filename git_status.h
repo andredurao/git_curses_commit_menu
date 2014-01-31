@@ -22,6 +22,17 @@ int i, npaths, zterm, diff_start_row, diff_start_col, diff_col_width, diff_col_h
 git_repository *repo;
 git_index *my_repo_index;
 git_status_list *status;
+git_config *cfg;
+git_signature *author, *cmtter;
+char *message;
+git_signature *signature;
+
+git_oid tree_id, parent_id, commit_id;
+git_tree *tree;
+git_commit *parent;
+
+unsigned int parents, p;
+
 char *repodir, *pathspec[MAX_PATHSPEC];
 repofile **repofile_list;
 size_t maxi, status_index;
