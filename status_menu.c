@@ -111,16 +111,13 @@ void open_commit_window(){
 	for (i = 0; i < maxi; ++i) {
     if(repofile_list[i]->check){
       git_index_add_bypath(my_repo_index, repofile_list[i]->filename);
-      // printf("file: [%s] result[%d]",
-      //   repofile_list[i]->filename,
-      //   git_index_add_bypath(my_repo_index, repofile_list[i]->filename)
-      // );
+      // printf("file: [%s]", repofile_list[i]->filename);
     }
   }
 
-  //writing index
-  git_index_write(my_repo_index);
-  git_index_free(my_repo_index);
+  // //writing index
+  // git_index_write(my_repo_index);
+  // git_index_free(my_repo_index);
 
   //Create commit signature
   const char *email, *name;
@@ -128,14 +125,40 @@ void open_commit_window(){
   git_config_get_string(&name, cfg, "user.name");
   git_signature_now(&signature, name, email);
 
+  //tree_lookup
+  git_revparse_single(&git_obj, repo, "HEAD^{tree}");
+  git_tree *tree = (git_tree *)git_obj;
+
+  
+  //get last commit => parent
+  git_revparse_single(&git_obj, repo, "HEAD");
+  git_oid *parent_oid = (git_oid *)git_obj; 
+
+  int error = git_commit_lookup(&parent, repo, parent_oid);
+  if (error != 0){
+    git_repository_free(repo);
+    endwin();
+    printf("problem loading parent \n");
+    exit(1);
+  }
+
   //Create the commit
-  // git_commit_create_v(
-  //   &commit_id, /* out id */
-  //   repo,
-  //   "HEAD",
-  //   signature, signature, //author and commiter
-  //   NULL, /* use default message encoding */
-  //   msg, tree, 1, parent);
+  git_commit_create_v(
+    &new_commit_id,
+    repo,
+    "HEAD",
+    signature, //author
+    signature, //commiter
+    NULL, /* use default message encoding */
+    msg,
+    tree,
+    1, // qty of parents
+    parent //parent commit
+  );
+
+  //writing index
+  git_index_write(my_repo_index);
+  git_index_free(my_repo_index);  
 
   git_repository_free(repo);
   endwin();

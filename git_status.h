@@ -27,9 +27,10 @@ git_signature *author, *cmtter;
 char *message;
 git_signature *signature;
 
-git_oid tree_id, parent_id, commit_id;
-git_tree *tree;
+git_object *git_obj;
+git_oid oid;
 git_commit *parent;
+git_oid new_commit_id;
 
 unsigned int parents, p;
 
