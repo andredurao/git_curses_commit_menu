@@ -126,8 +126,8 @@ void open_commit_window(){
   git_signature_now(&signature, name, email);
 
   //tree_lookup
-  git_revparse_single(&git_obj, repo, "HEAD^{tree}");
-  git_tree *tree = (git_tree *)git_obj;
+  // git_revparse_single(&git_obj, repo, "HEAD^{tree}");
+  // git_tree *tree = (git_tree *)git_obj;
 
   
   //get last commit => parent
@@ -141,6 +141,13 @@ void open_commit_window(){
     printf("problem loading parent \n");
     exit(1);
   }
+
+  //writing index
+  git_oid tree_oid;
+  git_index_write_tree(&tree_oid, my_repo_index);
+  // git_index_free(my_repo_index);
+  git_tree *tree;
+  git_tree_lookup(&tree, repo, &tree_oid);
 
   //Create the commit
   git_commit_create_v(
@@ -156,9 +163,9 @@ void open_commit_window(){
     parent //parent commit
   );
 
-  //writing index
-  git_index_write(my_repo_index);
-  git_index_free(my_repo_index);  
+  // //writing index
+  // git_index_write(my_repo_index);
+  // git_index_free(my_repo_index);  
 
   git_repository_free(repo);
   endwin();
