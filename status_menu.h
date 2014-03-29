@@ -18,6 +18,7 @@ void print_files_menu();
 void check_row();
 void check_all();
 void open_commit_window();
+void open_system_index_add_window();
 
 int menu_length();
 int left_center_col();

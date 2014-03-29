@@ -108,7 +108,7 @@ void open_commit_window(){
   int i=0;
 
   //Adding selected files on the index
-	for (i = 0; i < maxi; ++i) {
+  for (i = 0; i < maxi; ++i) {
     if(repofile_list[i]->check){
       git_index_add_bypath(my_repo_index, repofile_list[i]->filename);
       // printf("file: [%s]", repofile_list[i]->filename);
@@ -169,5 +169,30 @@ void open_commit_window(){
 
   git_repository_free(repo);
   endwin();
+  exit(EXIT_SUCCESS);
+}
+
+//function tries to add the selected files on index running
+//system functione instead of writing the index and creating a commit
+//with libgit2
+void open_system_index_add_window(){
+  mvprintw(rows - 3, 1, "Commit message: ");
+  move(rows - 2, 1);
+  echo();
+  scanw("%s", msg);
+  noecho();
+  endwin(); //Ending curses window
+  int i=0;
+
+  //adding selected files
+  for (i = 0; i < maxi; ++i) {
+    if(repofile_list[i]->check){
+//      git_index_add_bypath(my_repo_index, repofile_list[i]->filename);
+       printf("file: [%s]", repofile_list[i]->filename);
+    }
+  }
+
+
+  git_repository_free(repo);
   exit(EXIT_SUCCESS);
 }
