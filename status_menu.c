@@ -183,12 +183,14 @@ void open_system_index_add_window(){
   noecho();
   endwin(); //Ending curses window
   int i=0;
+  char cmd[255];
 
   //adding selected files
   for (i = 0; i < maxi; ++i) {
     if(repofile_list[i]->check){
-//      git_index_add_bypath(my_repo_index, repofile_list[i]->filename);
-       printf("file: [%s]", repofile_list[i]->filename);
+      sprintf(cmd, "git add %s", repofile_list[i]->filename);
+      printf("%s\n", cmd);
+      system(cmd);
     }
   }
 
