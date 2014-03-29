@@ -99,10 +99,10 @@ char* get_branch_name(){
 
 
 void get_files_list(){
-  
   size_t i;
   maxi = git_status_list_entrycount(status);
   const git_status_entry *s;
+  const char *oldname, *newname, *fname; 
 
   max_file_length = -1;
 
@@ -110,13 +110,27 @@ void get_files_list(){
   status_index = 0;
   for (i = 0; i < maxi; i++) {
     s = git_status_byindex(status, i);
+
+    oldname = s->head_to_index ? s->head_to_index->old_file.path :
+      s->index_to_workdir ? s->index_to_workdir->old_file.path : NULL;
+
+    newname = s->index_to_workdir ? s->index_to_workdir->new_file.path :
+      s->head_to_index ? s->head_to_index->new_file.path : NULL;
+
     repofile_list[i] = (repofile*) malloc(sizeof(repofile));
-    strcpy(repofile_list[i]->filename,s->index_to_workdir->old_file.path); 
+
+    if(newname)
+     fname = newname;
+    
+    if(oldname)
+     fname = oldname;
+    
+    strcpy(repofile_list[i]->filename, fname);
+    //printf("--%s [%d] \n", fname, s->status);
+    if ((int)strlen(fname) > max_file_length)
+      max_file_length = strlen(fname);
     repofile_list[i]->status = s->status;
-    repofile_list[i]->check = FALSE;
-    //printf("--%s [%d] \n", s->index_to_workdir->old_file.path, s->status);
-    if ((int)strlen(s->index_to_workdir->old_file.path) > max_file_length)
-      max_file_length = strlen(s->index_to_workdir->old_file.path);
+    repofile_list[i]->check = (s->status < 128);
   }
   max_file_length+=4;
 }

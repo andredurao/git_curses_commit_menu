@@ -24,8 +24,6 @@ void show_git_diff(){
   delwin(diff_window);
 }
 
-//TODO: Write help explanations, commands and what they do
-
 void show_help(){
   clear();
   attron(COLOR_PAIR(0));
@@ -75,7 +73,7 @@ void print_files_menu(){
 
   display_branch();
 
-	for (i = 0; i < maxi; ++i) {
+  for (i = 0; i < maxi; ++i) {
     mvprintw(5+i, 2, formatted_filename(i));
   }
   highlight();
@@ -188,12 +186,11 @@ void open_system_index_add_window(){
   //adding selected files
   for (i = 0; i < maxi; ++i) {
     if(repofile_list[i]->check){
-      sprintf(cmd, "git add %s", repofile_list[i]->filename);
-      printf("%s\n", cmd);
+      sprintf(cmd, "git add --all %s", repofile_list[i]->filename);
+      //printf("%s\n", cmd);
       system(cmd);
     }
   }
-
 
   git_repository_free(repo);
   exit(EXIT_SUCCESS);

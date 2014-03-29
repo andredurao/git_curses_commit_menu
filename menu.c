@@ -11,8 +11,6 @@
 
 int main(int argc, char** argv){
   
-  git_threads_init();
-
   initial_check();
   get_files_list();
 
