@@ -16,47 +16,42 @@ typedef struct repofile {
   bool check;
   char status;
 } repofile;
+repofile **repofile_list;
 
 
-int i, npaths, zterm, diff_start_row, diff_start_col, diff_col_width, diff_col_height, max_file_length;
+char *message;
+char *repodir, *pathspec[MAX_PATHSPEC];
+
+int i, npaths, zterm, max_file_length;
+int diff_start_row, diff_start_col, diff_col_width, diff_col_height;
+unsigned int parents, p;
+
+size_t maxi, status_index;
+
 git_repository *repo;
 git_index *my_repo_index;
 git_status_list *status;
 git_config *cfg;
 git_signature *author, *cmtter;
-char *message;
 git_signature *signature;
-
 git_object *git_obj;
 git_oid oid;
 git_commit *parent;
 git_oid new_commit_id;
 
-unsigned int parents, p;
-
-char *repodir, *pathspec[MAX_PATHSPEC];
-repofile **repofile_list;
-size_t maxi, status_index;
 WINDOW *diff_window; 
 
 int printer(const git_diff_delta*, const git_diff_hunk*, const git_diff_line*, void*);
 
 void initial_check();
-
 void check(int,const char*, const char *);
-
 void fail(const char *);
-
-char* get_branch_name();
-
+void diff(char*, WINDOW*);
 void get_files_list();
-
 void get_files_by_status(int, char);
 
+char* get_branch_name();
 char* formatted_filename(int);
-
 char* filename(int);
-
-void diff(char*, WINDOW*);
 
 #endif
