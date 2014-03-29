@@ -18,7 +18,7 @@ void show_git_diff(){
   }
   refresh();
   mvprintw(0, diff_col, filename(menu_index));
-  
+
   diff_window = newwin(rows - 4, cols - diff_col - 1, 2, diff_col + 1);
   diff(filename(menu_index), diff_window);
   delwin(diff_window);
@@ -38,7 +38,7 @@ void show_help(){
   mvprintw(7, 0, "Q / Esc       Quit");
   mvprintw(8, 0, "H / ?         Help");
   mvprintw(rows-1, 0, "Press any key to continue...");
-  
+
   getch();
   clear();
   attron(COLOR_PAIR(0));
@@ -46,7 +46,7 @@ void show_help(){
   show_git_diff();
 }
 
-void move_menu(int dir){  
+void move_menu(int dir){
   previous_index = menu_index;
   menu_index= (menu_index+menu_length()+dir) % menu_length();
   show_git_diff();
@@ -104,7 +104,7 @@ void open_commit_window(){
   echo();
   scanw("%s", msg);
   noecho();
-  
+
   int i=0;
 
   //Adding selected files on the index
@@ -129,10 +129,10 @@ void open_commit_window(){
   // git_revparse_single(&git_obj, repo, "HEAD^{tree}");
   // git_tree *tree = (git_tree *)git_obj;
 
-  
+
   //get last commit => parent
   git_revparse_single(&git_obj, repo, "HEAD");
-  git_oid *parent_oid = (git_oid *)git_obj; 
+  git_oid *parent_oid = (git_oid *)git_obj;
 
   int error = git_commit_lookup(&parent, repo, parent_oid);
   if (error != 0){
@@ -150,22 +150,22 @@ void open_commit_window(){
   git_tree_lookup(&tree, repo, &tree_oid);
 
   //Create the commit
-  git_commit_create_v(
-    &new_commit_id,
-    repo,
-    "HEAD",
-    signature, //author
-    signature, //commiter
-    NULL, /* use default message encoding */
-    msg,
-    tree,
-    1, // qty of parents
-    parent //parent commit
-  );
+  // git_commit_create_v(
+  //   &new_commit_id,
+  //   repo,
+  //   "HEAD",
+  //   signature, //author
+  //   signature, //commiter
+  //   NULL, /* use default message encoding */
+  //   msg,
+  //   tree,
+  //   1, // qty of parents
+  //   parent //parent commit
+  // );
 
   // //writing index
   // git_index_write(my_repo_index);
-  // git_index_free(my_repo_index);  
+  // git_index_free(my_repo_index);
 
   git_repository_free(repo);
   endwin();
