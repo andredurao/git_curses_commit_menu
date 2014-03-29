@@ -58,7 +58,7 @@ int main(int argc, char** argv){
         check_all();
         break;
       case 'c':
-        open_commit_window();
+        open_system_index_add_window();
         break;
     }
     ch = getch();  
