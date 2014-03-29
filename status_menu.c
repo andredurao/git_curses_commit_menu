@@ -181,15 +181,26 @@ void open_system_index_add_window(){
   noecho();
   endwin(); //Ending curses window
   int i=0;
+  int check_total = 0;
   char cmd[255];
 
-  //adding selected files
+  system("git reset . > /dev/null");
   for (i = 0; i < maxi; ++i) {
     if(repofile_list[i]->check){
-      sprintf(cmd, "git add --all %s", repofile_list[i]->filename);
+      check_total++;
+      sprintf(cmd, "git add --all %s > /dev/null", repofile_list[i]->filename);
+      //printf("%s\n", cmd);
+      system(cmd);
+    } else {
+      sprintf(cmd, "git reset HEAD %s > /dev/null", repofile_list[i]->filename);
       //printf("%s\n", cmd);
       system(cmd);
     }
+  }
+
+  if(check_total > 0){
+    sprintf(cmd, "git commit -m \"%s\"", msg);
+    system(cmd);
   }
 
   git_repository_free(repo);
