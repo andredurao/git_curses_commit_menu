@@ -14,15 +14,14 @@ void show_git_diff();
 void show_help();
 void move_menu(int);
 void highlight();
-//void print_center(char*);
-int left_center_col();
-int right_center_col();
-int center_col();
 void print_files_menu();
 void check_row();
 void check_all();
-int menu_length();
-
 void open_commit_window();
+
+int menu_length();
+int left_center_col();
+int right_center_col();
+int center_col();
 
 #endif
