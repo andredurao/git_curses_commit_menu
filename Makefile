@@ -9,6 +9,6 @@ clean:
 	rm -f *.o menu
 
 run: menu
-	./menu
+	#./menu
 
 set: clean build run
