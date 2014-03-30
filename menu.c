@@ -6,10 +6,6 @@
 #include "status_menu.h"
 #include "git_status.h"
 
-//TODO: If a directory has none changed or new files the app should quit
-//TODO: If a repo has already modified, new or deleted files on the index they should
-//      start checked, before commit it should reset the unchecked files
-
 int main(int argc, char** argv){
   setlocale(LC_ALL, "en_US.utf8");  
   initial_check();
@@ -32,9 +28,8 @@ int main(int argc, char** argv){
   refresh();
 
   print_files_menu();
+  show_git_diff();
 
-  //move(5,right_center_col());
-  //printw("diff");
   ch = getch();  
   while(ch != 27 && ch != 'q'){
     switch(ch){
