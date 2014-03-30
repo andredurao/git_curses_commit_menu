@@ -73,6 +73,13 @@ void print_files_menu(){
 
   display_branch();
 
+  if(maxi <= 0){
+    endwin();
+    printf("On branch %s\nnothing to commit, working directory clean\n", get_branch_name());
+    git_repository_free(repo);
+    exit(EXIT_SUCCESS);
+  }
+
   for (i = 0; i < maxi; ++i) {
     mvprintw(5+i, 2, formatted_filename(i));
   }
@@ -167,6 +174,14 @@ void open_commit_window(){
 
   git_repository_free(repo);
   endwin();
+  exit(EXIT_SUCCESS);
+}
+
+
+// End curses window, free git repo + exit
+void clean_exit(){
+  endwin();
+  git_repository_free(repo);
   exit(EXIT_SUCCESS);
 }
 

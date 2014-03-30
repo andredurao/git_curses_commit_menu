@@ -100,11 +100,12 @@ char* get_branch_name(){
 
 void get_files_list(){
   size_t i;
-  maxi = git_status_list_entrycount(status);
   const git_status_entry *s;
   const char *oldname, *newname, *fname; 
 
   max_file_length = -1;
+  //maxi => git status entries count
+  maxi = git_status_list_entrycount(status);
 
   repofile_list = (repofile**) malloc(maxi * sizeof(repofile));
   status_index = 0;
