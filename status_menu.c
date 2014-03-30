@@ -192,7 +192,7 @@ void open_system_index_add_window(){
   mvprintw(rows - 3, 1, "Commit message: ");
   move(rows - 2, 1);
   echo();
-  scanw("%s", msg);
+  getstr(msg);
   noecho();
   endwin(); //Ending curses window
   int i=0;
@@ -215,6 +215,7 @@ void open_system_index_add_window(){
 
   if(check_total > 0){
     sprintf(cmd, "git commit -m \"%s\"", msg);
+    //printf("\n [ %s ] \n", cmd);
     system(cmd);
   }
 

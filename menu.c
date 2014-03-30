@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
 #include <ncurses.h>
 #include <string.h>
 #include "status_menu.h"
@@ -10,7 +11,7 @@
 //      start checked, before commit it should reset the unchecked files
 
 int main(int argc, char** argv){
-  
+  setlocale(LC_ALL, "en_US.utf8");  
   initial_check();
   get_files_list();
 
